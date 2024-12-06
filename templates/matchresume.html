@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Job Description Matcher</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center">
+                <h2>AI-Powered Resume Shortlisting Tool</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/matcher" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="required_skills">Required Skills (comma-separated):</label>
+                        <input type="text" class="form-control" id="required_skills" name="required_skills" placeholder="e.g., Python, SQL, Machine Learning" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="required_experience">Required Experience (in years):</label>
+                        <input type="number" class="form-control" id="required_experience" name="required_experience" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="required_education">Required Education Background:</label>
+                        <input type="text" class="form-control" id="required_education" name="required_education" placeholder="e.g., Bachelor's, Master's" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="excel_file">Upload Resumes Data (Excel):</label>
+                        <input type="file" class="form-control" id="excel_file" name="excel_file" required accept=".xlsx, .xls">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Match Resumes</button>
+                </form>
+
+                {% if message %}
+                    <div class="alert alert-info mt-4">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endif %}
+
+                {% if feedback %}
+                    <h3 class="mt-4">Matching Resumes</h3>
+                    <ul>
+                        {% for item in feedback %}
+                            <li>
+                                <strong>{{ item.name }}</strong> (Similarity: {{ item.similarity_score }})
+                                <ul>
+                                    <li><strong>Skills Match:</strong> {{ item.skills_feedback }}</li>
+                                    <li><strong>Experience Relevance:</strong> {{ item.experience_feedback }}</li>
+                                    <li><strong>Education Match:</strong> {{ item.education_feedback }}</li>
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
